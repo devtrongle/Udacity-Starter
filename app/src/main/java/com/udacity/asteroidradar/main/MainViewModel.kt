@@ -7,11 +7,13 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Constants.API_KEY
 import com.udacity.asteroidradar.api.RetrofitApi
 import com.udacity.asteroidradar.daos.AsteroidRepository
 import com.udacity.asteroidradar.entities.Asteroid
 import com.udacity.asteroidradar.entities.PictureOfDay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +44,10 @@ class MainViewModel(private val context: Context) : ViewModel() {
         getPictureOfDay()
     }
 
+    suspend fun getAsteroidListFromApi(){
+        asteroidRepository.getAsteroidFromApi()
+    }
+
     private fun getPictureOfDay() {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(
             "AsteroidRadar",
@@ -57,7 +63,6 @@ class MainViewModel(private val context: Context) : ViewModel() {
         oldTitle?.let {
             _mTitlePictureOfDay.value = it
         }
-
 
         //Get new url
         RetrofitApi.apiService.getApod(API_KEY)

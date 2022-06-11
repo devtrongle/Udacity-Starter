@@ -5,11 +5,14 @@ import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.ViewModelFactory
 import com.udacity.asteroidradar.adapters.AsteroidAdapter
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainFragment : Fragment() {
 
@@ -26,6 +29,13 @@ class MainFragment : Fragment() {
         mBinding = FragmentMainBinding.inflate(inflater)
         mBinding.lifecycleOwner = this
 
+        mBinding.refreshMain.setOnRefreshListener {
+            lifecycleScope.launch {
+                viewModel.getAsteroidListFromApi()
+                mBinding.refreshMain.isRefreshing = false
+            }
+        }
+
         mBinding.viewModel = viewModel
 
         setHasOptionsMenu(true)
@@ -39,6 +49,7 @@ class MainFragment : Fragment() {
         }
 
         viewModel.asteroidList.observe(viewLifecycleOwner) {
+            Timber.d("asteroidList changes")
             adapter.submitList(it)
         }
 
