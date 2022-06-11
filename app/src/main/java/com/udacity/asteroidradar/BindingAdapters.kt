@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar
 
-import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -10,8 +9,8 @@ import com.squareup.picasso.Picasso
  * Binding adapter for load image from internet
  */
 @BindingAdapter("imageFromUrl")
-fun loadImageOfDay(imageView: ImageView, url: String?){
-    if(!url.isNullOrEmpty()){
+fun loadImageOfDay(imageView: ImageView, url: String?) {
+    if (!url.isNullOrEmpty()) {
         Picasso.get()
             .load(url)
             .into(imageView)
